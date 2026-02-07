@@ -32,4 +32,10 @@ def verify_access_token(token:str,credential_exceptions):
         raise credential_exceptions
     
 def get_current_user(token:str=Depends(oauth_scheme),db:Session=Depends(database.get_db)):
-    pass
+    credential_exceptions = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail='colud not validate credential',headers={'WWW-Authenticate':'Bearer'})
+
+    token_data = verify_access_token(token,credential_exceptions)
+    user = db.query(models.User).filter(models.User.id == token_data.id).first()
+    if user is None:
+        raise credential_exceptions
+    return user
