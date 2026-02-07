@@ -19,7 +19,7 @@ def login(
         models.User.email == user_credentials.username
     ).first()
 
-    if not user or not utils.verify_password(
+    if not user or not utils.verify(
         user_credentials.password, user.password
     ):
         raise HTTPException(status_code=403, detail="Invalid credentials")
@@ -34,8 +34,8 @@ def login(
     }
 
 @router.post("/refresh")
-def refresh_token(refresh_token: str):
-    user_id = verify_refresh_token(refresh_token)
+def refresh_token(request: RefreshTokenRequest):
+    user_id = verify_refresh_token(request.refresh_token)
 
     new_access_token = create_access_token({"user_id": user_id})
 
