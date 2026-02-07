@@ -3,19 +3,21 @@ from typing import Optional
 
 
 class UserModel(BaseModel):
-    user: str
+    name: str
     email: str
     password: str
 
     
 class UserResponse(BaseModel):
     id: int
-    user: str
+    name: str
     email: str
-    password: str
     
     class Config:
         from_attributes=True
 
 class TokenData(BaseModel):
     id : Optional[int] = None
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
